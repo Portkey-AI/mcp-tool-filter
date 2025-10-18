@@ -1,0 +1,260 @@
+/**
+ * Example MCP servers configuration
+ * 
+ * This file demonstrates the optimal JSON format for MCP servers and tools.
+ * 
+ * Key points for best matching quality:
+ * 1. Rich, descriptive tool descriptions
+ * 2. Add keywords array for common synonyms/variations
+ * 3. Include category for hierarchical filtering
+ * 4. Keep inputSchema for parameter name matching
+ */
+
+[
+  {
+    "id": "gmail",
+    "name": "Gmail MCP Server",
+    "description": "Email management and communication tools for Gmail",
+    "categories": ["email", "communication"],
+    "tools": [
+      {
+        "name": "search_gmail_messages",
+        "description": "Search and find email messages in Gmail inbox. Use when user wants to find, search, look up, or retrieve emails, messages, or correspondence. Supports Gmail search operators for filtering by sender, date, labels, attachments, and more.",
+        "keywords": [
+          "email",
+          "search",
+          "find",
+          "inbox",
+          "messages",
+          "mail",
+          "correspondence",
+          "lookup"
+        ],
+        "category": "email-search",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "q": {
+              "type": "string",
+              "description": "Gmail search query"
+            },
+            "page_token": {
+              "type": "string",
+              "description": "Pagination token"
+            }
+          }
+        }
+      },
+      {
+        "name": "gmail_create_draft",
+        "description": "Create and compose a draft email message in Gmail. Use when user wants to write, draft, compose, or prepare an email to send later. Can set recipients, subject, body content, and attachments.",
+        "keywords": [
+          "draft",
+          "compose",
+          "write",
+          "create",
+          "email",
+          "message",
+          "prepare"
+        ],
+        "category": "email-compose",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "to": {
+              "type": "string",
+              "description": "Recipient email addresses"
+            },
+            "subject": {
+              "type": "string",
+              "description": "Email subject"
+            },
+            "body": {
+              "type": "string",
+              "description": "Email body content"
+            }
+          }
+        }
+      },
+      {
+        "name": "read_gmail_thread",
+        "description": "Read a specific email conversation thread in Gmail. Use when user wants to view, read, or see the full conversation history of an email thread including all replies and messages.",
+        "keywords": [
+          "read",
+          "view",
+          "thread",
+          "conversation",
+          "email chain",
+          "replies"
+        ],
+        "category": "email-read"
+      }
+    ]
+  },
+  {
+    "id": "google-calendar",
+    "name": "Google Calendar MCP Server",
+    "description": "Calendar and scheduling tools for Google Calendar",
+    "categories": ["calendar", "scheduling", "time-management"],
+    "tools": [
+      {
+        "name": "list_gcal_events",
+        "description": "List and search calendar events and meetings from Google Calendar. Use when user wants to view, check, find, or list their schedule, appointments, meetings, or calendar events for a specific time period.",
+        "keywords": [
+          "calendar",
+          "events",
+          "meetings",
+          "appointments",
+          "schedule",
+          "list",
+          "find",
+          "search"
+        ],
+        "category": "calendar-view"
+      },
+      {
+        "name": "find_free_time",
+        "description": "Find available free time slots across calendars. Use when user wants to find, check, or identify when they are free, available, or have open time slots for scheduling meetings or appointments.",
+        "keywords": [
+          "free time",
+          "availability",
+          "open slots",
+          "schedule",
+          "when free",
+          "available times"
+        ],
+        "category": "calendar-availability"
+      }
+    ]
+  },
+  {
+    "id": "slack",
+    "name": "Slack MCP Server",
+    "description": "Team communication and messaging tools for Slack",
+    "categories": ["communication", "messaging", "collaboration"],
+    "tools": [
+      {
+        "name": "slack_search_public",
+        "description": "Search for messages, files, and content in public Slack channels. Use when user wants to find, search, look up, or retrieve Slack messages, conversations, or shared content from team channels.",
+        "keywords": [
+          "slack",
+          "search",
+          "find",
+          "messages",
+          "channels",
+          "conversations",
+          "team chat"
+        ],
+        "category": "messaging-search"
+      },
+      {
+        "name": "slack_send_message",
+        "description": "Send a message to a Slack channel or direct message to a user. Use when user wants to send, post, share, or message someone on Slack.",
+        "keywords": [
+          "send",
+          "post",
+          "message",
+          "slack",
+          "dm",
+          "direct message",
+          "notify"
+        ],
+        "category": "messaging-send"
+      },
+      {
+        "name": "slack_create_canvas",
+        "description": "Create a Slack Canvas document for collaborative notes and documentation. Use when user wants to create, make, or start a document, notes, or collaborative workspace in Slack.",
+        "keywords": [
+          "canvas",
+          "document",
+          "notes",
+          "create",
+          "collaborative",
+          "doc"
+        ],
+        "category": "document-create"
+      }
+    ]
+  },
+  {
+    "id": "web-tools",
+    "name": "Web Tools MCP Server",
+    "description": "Web search and content fetching tools",
+    "categories": ["search", "web", "research"],
+    "tools": [
+      {
+        "name": "web_search",
+        "description": "Search the web using a search engine. Use when user wants to search the internet, look up current information, find websites, or research topics online. Good for finding recent news, current events, or up-to-date information.",
+        "keywords": [
+          "search",
+          "web",
+          "google",
+          "internet",
+          "lookup",
+          "find online",
+          "research"
+        ],
+        "category": "web-search"
+      },
+      {
+        "name": "web_fetch",
+        "description": "Fetch and retrieve the full content of a webpage at a given URL. Use when user wants to read, view, or extract content from a specific website or webpage.",
+        "keywords": [
+          "fetch",
+          "get",
+          "retrieve",
+          "webpage",
+          "website",
+          "url",
+          "download"
+        ],
+        "category": "web-fetch"
+      }
+    ]
+  },
+  {
+    "id": "grain",
+    "name": "Grain MCP Server",
+    "description": "Meeting recording and transcript tools for Grain",
+    "categories": ["meetings", "transcription", "video"],
+    "tools": [
+      {
+        "name": "list_meetings",
+        "description": "List and filter recorded meetings from Grain. Use when user wants to find, view, or list their recorded meetings, video calls, or conference recordings.",
+        "keywords": [
+          "meetings",
+          "recordings",
+          "calls",
+          "video",
+          "grain",
+          "list"
+        ],
+        "category": "meeting-management"
+      },
+      {
+        "name": "fetch_meeting_transcript",
+        "description": "Fetch the transcript from a specific Grain meeting recording. Use when user wants to read, view, or get the text transcript or notes from a recorded meeting.",
+        "keywords": [
+          "transcript",
+          "meeting notes",
+          "recording text",
+          "conversation",
+          "spoken content"
+        ],
+        "category": "meeting-transcript"
+      },
+      {
+        "name": "search_meetings",
+        "description": "Semantically search through meeting transcripts to find specific discussions or topics. Use when user wants to find what was discussed, search meeting content, or locate specific conversations in recordings.",
+        "keywords": [
+          "search meetings",
+          "find discussion",
+          "what was said",
+          "meeting content",
+          "conversation search"
+        ],
+        "category": "meeting-search"
+      }
+    ]
+  }
+]

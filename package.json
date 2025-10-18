@@ -1,0 +1,60 @@
+{
+  "name": "@portkey-ai/mcp-tool-filter",
+  "version": "0.1.0",
+  "description": "Ultra-fast semantic tool filtering for MCP servers using embedding similarity",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "prepublishOnly": "npm run build && npm test",
+    "prepare": "npm run build",
+    "version": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Portkey-AI/mcp-tool-filter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Portkey-AI/mcp-tool-filter/issues"
+  },
+  "homepage": "https://github.com/Portkey-AI/mcp-tool-filter#readme",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "tool-filtering",
+    "semantic-search",
+    "embeddings",
+    "llm",
+    "ai",
+    "openai",
+    "transformers",
+    "local-embeddings",
+    "vector-similarity",
+    "cosine-similarity",
+    "portkey"
+  ],
+  "author": "Portkey AI",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2",
+    "openai": "^4.20.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,45 @@
+# Source files
+src/
+*.test.ts
+*.test.js
+
+# Development files
+tsconfig.json
+jest.config.js
+.vscode/
+.idea/
+
+# Documentation (keep only README in package)
+docs/
+
+# Examples (users can view on GitHub)
+examples/
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+
+# Development artifacts
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+coverage/
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Misc
+.env
+.env.local
+node_modules/
+
