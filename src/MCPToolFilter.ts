@@ -16,6 +16,7 @@ import {
   hashString,
   Timer,
   ToolWithMetadata,
+  LRUCache,
 } from './utils';
 
 /**
@@ -30,13 +31,14 @@ export class MCPToolFilter {
   private toolEmbeddings: Map<string, Float32Array> = new Map();
   private toolMetadata: Map<string, ToolWithMetadata> = new Map();
   
-  // Context embedding cache
-  private contextCache: Map<string, Float32Array> = new Map();
+  // Context embedding cache with proper LRU eviction
+  private contextCache: LRUCache<string, Float32Array>;
   private readonly MAX_CACHE_SIZE = 100;
   
   constructor(config: MCPToolFilterConfig) {
     this.config = config;
     this.embeddingProvider = createEmbeddingProvider(config.embedding);
+    this.contextCache = new LRUCache(this.MAX_CACHE_SIZE);
     
     this.log('MCPToolFilter initialized with provider:', config.embedding.provider);
   }
@@ -117,8 +119,9 @@ export class MCPToolFilter {
     let embeddingTime: number;
     const cacheTime = cacheTimer.elapsed();
     
-    if (this.contextCache.has(contextHash)) {
-      contextEmbedding = this.contextCache.get(contextHash)!;
+    const cachedEmbedding = this.contextCache.get(contextHash);
+    if (cachedEmbedding !== undefined) {
+      contextEmbedding = cachedEmbedding;
       embeddingTime = 0;
       this.log(`[3/5] Cache HIT (lookup: ${cacheTime.toFixed(2)}ms, embedding: 0ms)`);
     } else {
@@ -126,11 +129,11 @@ export class MCPToolFilter {
       // Embed context
       const embTimer = new Timer();
       const rawEmbedding = await this.embeddingProvider.embed(contextString);
-      contextEmbedding = normalizeVector(rawEmbedding);
+      contextEmbedding = normalizeVector(rawEmbedding, true); // Use in-place normalization
       embeddingTime = embTimer.elapsed();
       
       // Cache the embedding
-      this.cacheContextEmbedding(contextHash, contextEmbedding);
+      this.contextCache.set(contextHash, contextEmbedding);
       
       this.log(`     → Embedding generated: ${embeddingTime.toFixed(2)}ms`);
     }
@@ -168,18 +171,20 @@ export class MCPToolFilter {
   
   /**
    * Compute similarity scores for all tools
+   * Optimized to minimize intermediate array allocations
    */
   private computeSimilarities(
     contextEmbedding: Float32Array,
     options: Required<FilterOptions>
   ): ScoredTool[] {
     const scores: ScoredTool[] = [];
+    const excludeSet = new Set(options.exclude); // Pre-convert to Set for O(1) lookup
     
     for (const [toolKey, toolEmbedding] of this.toolEmbeddings.entries()) {
       const metadata = this.toolMetadata.get(toolKey)!;
       
-      // Skip excluded tools
-      if (options.exclude.includes(metadata.tool.name)) {
+      // Skip excluded tools (O(1) lookup)
+      if (excludeSet.has(metadata.tool.name)) {
         continue;
       }
       
@@ -199,12 +204,13 @@ export class MCPToolFilter {
   
   /**
    * Select and rank tools based on scores
+   * Optimized to reduce intermediate array allocations
    */
   private selectTools(
     scores: ScoredTool[],
     options: Required<FilterOptions>
   ): ScoredTool[] {
-    // Separate always-include tools
+    // Separate always-include tools and filter by minScore in one pass
     const alwaysIncludeSet = new Set(options.alwaysInclude);
     const alwaysIncluded: ScoredTool[] = [];
     const scoredTools: ScoredTool[] = [];
@@ -217,30 +223,16 @@ export class MCPToolFilter {
       }
     }
     
-    // Get top K from scored tools
+    // Get top K from scored tools using heap-based selection (O(n log k))
+    const remainingSlots = Math.max(0, options.topK - alwaysIncluded.length);
     const topScored = partialSort(
       scoredTools,
-      options.topK - alwaysIncluded.length,
+      remainingSlots,
       (tool) => tool.score
     );
     
     // Combine: always-included first, then top scored
     return [...alwaysIncluded, ...topScored];
-  }
-  
-  /**
-   * Cache context embedding with LRU eviction
-   */
-  private cacheContextEmbedding(hash: string, embedding: Float32Array): void {
-    // Simple LRU: if cache is full, remove oldest entry
-    if (this.contextCache.size >= this.MAX_CACHE_SIZE) {
-      const firstKey = this.contextCache.keys().next().value;
-      if (firstKey !== undefined) {
-        this.contextCache.delete(firstKey);
-      }
-    }
-    
-    this.contextCache.set(hash, embedding);
   }
   
   /**

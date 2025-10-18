@@ -17,43 +17,43 @@ The MCP Tool Filter is a TypeScript library that uses semantic similarity to int
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     Initialization Phase                     │
-│                        (One-time)                            │
+│                     Initialization Phase                    │
+│                        (One-time)                           │
 ├─────────────────────────────────────────────────────────────┤
-│                                                               │
-│  MCP Servers JSON                                            │
-│        │                                                      │
-│        ├─> Extract Tools + Generate Rich Descriptions        │
-│        │                                                      │
+│                                                             │
+│  MCP Servers JSON                                           │
+│        │                                                    │
+│        ├─> Extract Tools + Generate Rich Descriptions       │
+│        │                                                    │
 │        ├─> Batch Embed Descriptions (via API)               │
-│        │                                                      │
+│        │                                                    │
 │        └─> Normalize & Cache Embeddings                     │
-│                                                               │
+│                                                             │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
-│                      Filter Phase                            │
+│                      Filter Phase                           │
 │                    (Hot Path: <10ms)                        │
 ├─────────────────────────────────────────────────────────────┤
-│                                                               │
+│                                                             │
 │  Chat Context (messages or string)                          │
-│        │                                                      │
+│        │                                                    │
 │        ├─> Build Context String (~0ms)                      │
-│        │                                                      │
-│        ├─> Check Cache                                       │
-│        │   ├─ Hit: Use cached embedding (0ms)              │
-│        │   └─ Miss: Embed context (3-5ms)                  │
-│        │                                                      │
+│        │                                                    │
+│        ├─> Check Cache (LRU Cache)                          │
+│        │   ├─ Hit: Use cached embedding (0ms)               │
+│        │   └─ Miss: Embed context (3-5ms)                   │
+│        │                                                    │
 │        ├─> Compute Similarities (1-2ms)                     │
-│        │   └─ Dot product with all tool embeddings         │
-│        │                                                      │
+│        │   └─ Dot product with all tool embeddings          │
+│        │                                                    │
 │        ├─> Filter & Rank (0ms)                              │
 │        │   ├─ Apply minScore threshold                      │
 │        │   ├─ Partial sort for top-K                        │
 │        │   └─ Add always-include tools                      │
-│        │                                                      │
+│        │                                                    │
 │        └─> Return Filtered Tools + Metrics                  │
-│                                                               │
+│                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
