@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Portkey-AI/mcp-tool-filter.git"
+    "url": "git+https://github.com/Portkey-AI/mcp-tool-filter.git"
   },
   "bugs": {
     "url": "https://github.com/Portkey-AI/mcp-tool-filter/issues"
