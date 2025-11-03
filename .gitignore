@@ -7,24 +7,49 @@ dist/
 # Logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
 # Environment variables
 .env
 .env.local
+.env.*.local
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
+*.pid
+*.seed
+*.pid.lock
 
 # Testing
 coverage/
 .nyc_output/
+*.lcov
 
-# Misc
+# Temporary files
+*.tmp
+.cache/
+
+# Package files
 *.tgz
+package-lock.json.bak
+
+# LaTeX artifacts (keep source but ignore build files)
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.fls

@@ -5,11 +5,12 @@ src/
 
 # Development files
 tsconfig.json
+jest.config.cjs
 jest.config.js
 .vscode/
 .idea/
 
-# Documentation (keep only README in package)
+# Documentation (keep only README, CHANGELOG, CONTRIBUTING, LICENSE)
 docs/
 
 # Examples (users can view on GitHub)
@@ -30,6 +31,7 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 coverage/
+.nyc_output/
 
 # Editor files
 *.swp
@@ -41,5 +43,22 @@ coverage/
 # Misc
 .env
 .env.local
+.env.*.local
 node_modules/
+
+# LaTeX files (academic papers not needed in npm package)
+*.tex
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# Temporary files
+*.tmp
+.cache/
 
