@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2025-11-03
+
+🎉 **First Stable Release!**
+
 ### Added
 - Initial release of @portkey-ai/mcp-tool-filter
 - Local embeddings support using @xenova/transformers
@@ -17,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable filtering options (topK, minScore, alwaysInclude, exclude)
 - Performance metrics and debug logging
 - Comprehensive documentation and examples
+- `includeServerDescription` option for better high-level intent queries
 
 ### Performance
 - **Loop-Unrolled Dot Product**: 6-8x faster vector similarity computation through CPU pipeline optimization
@@ -25,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **In-Place Vector Normalization**: Optional in-place normalization reduces memory allocations by ~30%
 - **Set-Based Exclusion**: O(1) exclusion checking instead of O(n) array operations
 - **Overall**: 50-80% faster filtering for typical workloads with zero configuration needed
+
+### Fixed
+- Jest configuration for ES modules compatibility
+- Updated .gitignore and .npmignore for cleaner package distribution
 
 ## [0.1.0] - 2025-10-19
 
