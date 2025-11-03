@@ -231,9 +231,29 @@ new MCPToolFilter(config: MCPToolFilterConfig)
     exclude?: string[],         // Never include these tools
     maxContextTokens?: number,  // Default: 500
   },
+  includeServerDescription?: boolean,  // Default: false (see below)
   debug?: boolean               // Enable debug logging
 }
 ```
+
+**About `includeServerDescription`:**
+
+When enabled, this option includes the MCP server description in the tool embeddings, providing additional context about the domain/category of tools.
+
+```typescript
+// Enable server descriptions in embeddings
+const filter = new MCPToolFilter({
+  embedding: { provider: 'local' },
+  includeServerDescription: true  // Default: false
+});
+```
+
+**Tradeoffs:**
+- ✅ **Helps**: General intent queries like "manage my local files" (+25% improvement)
+- ❌ **Hurts**: Specific tool queries like "Execute this SQL query" (-50% degradation)
+- ≈ **Neutral**: Overall impact is neutral (0% change)
+
+**Recommendation:** Keep this disabled (default: `false`) unless your use case primarily involves high-level intent queries. See `examples/benchmark-server-description.ts` for detailed benchmarks.
 
 #### Methods
 

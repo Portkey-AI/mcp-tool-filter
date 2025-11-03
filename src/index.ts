@@ -4,7 +4,7 @@
  * Ultra-fast semantic tool filtering for MCP servers using embedding similarity
  */
 
-export { MCPToolFilter } from './MCPToolFilter';
+export { MCPToolFilter } from './MCPToolFilter.js';
 
 export type {
   MCPTool,
@@ -16,9 +16,9 @@ export type {
   FilterResult,
   EmbeddingConfig,
   MCPToolFilterConfig,
-} from './types';
+} from './types.js';
 
 export {
   createEmbeddingProvider,
   type EmbeddingProvider,
-} from './embedding';
+} from './embedding.js';

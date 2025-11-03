@@ -147,6 +147,9 @@ export interface MCPToolFilterConfig {
   
   /** Enable debug logging */
   debug?: boolean;
+  
+  /** Include server description in tool embeddings for additional context (default: false) */
+  includeServerDescription?: boolean;
 }
 
 /**

@@ -2,6 +2,7 @@
   "name": "@portkey-ai/mcp-tool-filter",
   "version": "0.1.0",
   "description": "Ultra-fast semantic tool filtering for MCP servers using embedding similarity",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
