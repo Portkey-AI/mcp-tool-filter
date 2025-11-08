@@ -22,6 +22,73 @@ export interface EmbeddingProvider {
 }
 
 /**
+ * Workers AI embedding provider
+ * Uses direct fetch calls instead of OpenAI SDK due to compatibility issues
+ * (OpenAI SDK v4.20.0 has a bug that truncates Workers AI embeddings to 192 dims with zeros)
+ */
+export class WorkersAIEmbeddingProvider implements EmbeddingProvider {
+  private apiKey: string;
+  private baseURL: string;
+  private model: string;
+  private dimensions: number;
+
+  constructor(config: APIEmbeddingConfig) {
+    this.apiKey = config.apiKey;
+    this.baseURL = config.baseURL || '';
+    this.model = config.model || '@cf/baai/bge-base-en-v1.5';
+    this.dimensions = config.dimensions || 768;
+  }
+
+  async embed(text: string): Promise<Float32Array> {
+    const response = await fetch(`${this.baseURL}/embeddings`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: this.model,
+        input: text
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Workers AI API error: ${response.status} ${errorText}`);
+    }
+
+    const data: any = await response.json();
+    return new Float32Array(data.data[0].embedding);
+  }
+
+  async embedBatch(texts: string[]): Promise<Float32Array[]> {
+    const response = await fetch(`${this.baseURL}/embeddings`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: this.model,
+        input: texts
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Workers AI API error: ${response.status} ${errorText}`);
+    }
+
+    const data: any = await response.json();
+    return data.data.map((d: any) => new Float32Array(d.embedding));
+  }
+
+  getDimensions(): number {
+    return this.dimensions;
+  }
+}
+
+/**
  * OpenAI embedding provider
  */
 export class OpenAIEmbeddingProvider implements EmbeddingProvider {
@@ -202,6 +269,12 @@ export class CohereEmbeddingProvider implements EmbeddingProvider {
  * Factory to create embedding provider
  */
 export function createEmbeddingProvider(config: EmbeddingConfig): EmbeddingProvider {
+  // If using OpenAI provider with a Workers AI model, use WorkersAIProvider instead
+  // (OpenAI SDK is incompatible with Workers AI's response format)
+  if (config.provider === 'openai' && config.model?.startsWith('@cf/')) {
+    return new WorkersAIEmbeddingProvider(config);
+  }
+
   switch (config.provider) {
     case 'openai':
       return new OpenAIEmbeddingProvider(config);
